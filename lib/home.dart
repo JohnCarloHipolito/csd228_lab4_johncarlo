@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'pokemon_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -107,77 +108,72 @@ class _HomePageState extends State<HomePage> {
           child: _pokemonCards.isEmpty && _isLoading
               ? const CircularProgressIndicator()
               : SingleChildScrollView(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
-                  ),
-                  itemCount: _filteredPokemonCards.length,
-                  itemBuilder: (context, index) {
-                    final card = _filteredPokemonCards[index];
-                    return GestureDetector(
-                      onTap: () => _showLargeImage(context, card.id),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(6.0),
-                                topRight: Radius.circular(6.0),
+                  controller: _scrollController,
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _filteredPokemonCards.length,
+                        itemBuilder: (context, index) {
+                          final card = _filteredPokemonCards[index];
+                          return GestureDetector(
+                            onTap: () => _showLargeImage(context, card.id),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0), // Add padding around the entire item
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5), // Set semi-transparent background color
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 100, // Adjust the width as needed
+                                      height: 100, // Adjust the height as needed
+                                      // add padding on top and bottom
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(6.0),
+                                          bottomLeft: Radius.circular(6.0),
+                                        ),
+                                        child: Image.network(card.imageUrl, fit: BoxFit.fitHeight),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8.0), // Add padding inside the item content
+                                        child: Text(
+                                          card.name,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0, // Increase font size
+                                            shadows: [
+                                              Shadow(
+                                                offset: Offset(2.0, 2.0),
+                                                blurRadius: 3.0,
+                                                color: Color.fromARGB(128, 0, 0, 0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(6.0),
-                                    topRight: Radius.circular(6.0),
-                                  ),
-                                  child: AspectRatio(
-                                    aspectRatio: 1.0,
-                                    child: Image.network(card.imageUrl, fit: BoxFit.fitHeight),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    color: Colors.black54,
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      card.name,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                      if (_isLoading) const CircularProgressIndicator(),
+                    ],
+                  ),
                 ),
-                if (_isLoading) const CircularProgressIndicator(),
-              ],
-            ),
-          ),
         ),
       ),
     );
