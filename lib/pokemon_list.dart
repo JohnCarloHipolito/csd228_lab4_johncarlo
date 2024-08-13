@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<PokemonCard>> fetchPokemonCards({int page = 1}) async {
   final response = await http.get(
-    Uri.parse('https://api.pokemontcg.io/v2/cards?page=$page&pageSize=32'),
+    Uri.parse('https://api.pokemontcg.io/v2/cards?page=$page&pageSize=12'),
     headers: {'X-Api-Key': 'YOUR_API_KEY'},
   );
 
