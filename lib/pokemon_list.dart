@@ -9,13 +9,13 @@ Future<List<PokemonCard>> fetchPokemonCards({int page = 1}) async {
 
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
-    return (data['data'] as List).map((json) => PokemonCard.fromJson(json)).toList();
+    return (data['data'] as List).map((json) => PokemonCard.fromJson(json, 'small')).toList();
   } else {
     throw Exception('Failed to load Pokémon cards');
   }
 }
 
-Future<PokemonCard> fetchPokemonCardById(String id) async {
+Future<PokemonCard> fetchPokemonCardById(String id, String size) async {
   final response = await http.get(
     Uri.parse('https://api.pokemontcg.io/v2/cards/$id'),
     headers: {'X-Api-Key': 'YOUR_API_KEY'},
@@ -23,7 +23,7 @@ Future<PokemonCard> fetchPokemonCardById(String id) async {
 
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
-    return PokemonCard.fromJson(data['data']);
+    return PokemonCard.fromJson(data['data'], size);
   } else {
     throw Exception('Failed to load Pokémon card');
   }
@@ -36,11 +36,11 @@ class PokemonCard {
 
   PokemonCard({required this.id, required this.name, required this.imageUrl});
 
-  factory PokemonCard.fromJson(Map<String, dynamic> json) {
+  factory PokemonCard.fromJson(Map<String, dynamic> json, String size) {
     return PokemonCard(
       id: json['id'],
       name: json['name'],
-      imageUrl: json['images']['small'],
+      imageUrl: json['images'][size],
     );
   }
 }
